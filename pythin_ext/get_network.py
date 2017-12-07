@@ -12,6 +12,7 @@ def printMB_s():
  print bytes_Diff
  old_Tot_Bytes = cur_tot_bytes
  down_speed = int(bytes_Diff)
+ down_speed = down_speed / 1000
  down_speed = str(down_speed)
  print down_speed + "KB/s"
  time.sleep(1)
