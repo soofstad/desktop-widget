@@ -1,0 +1,1 @@
+D:\Program\nircmd\nircmdc.exe setdefaultsounddevice "TV" 1 
