@@ -58,6 +58,7 @@ Partial Class Klokke
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.Button2 = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -123,6 +124,8 @@ Partial Class Klokke
         '
         'GroupBox1
         '
+        Me.GroupBox1.BackColor = System.Drawing.Color.Transparent
+        Me.GroupBox1.Controls.Add(Me.Button2)
         Me.GroupBox1.Controls.Add(Me.ProgressBar6)
         Me.GroupBox1.Controls.Add(Me.Label22)
         Me.GroupBox1.Controls.Add(Me.Label24)
@@ -329,6 +332,7 @@ Partial Class Klokke
         'ProgressBar1
         '
         Me.ProgressBar1.Location = New System.Drawing.Point(8, 152)
+        Me.ProgressBar1.Maximum = 32000
         Me.ProgressBar1.Name = "ProgressBar1"
         Me.ProgressBar1.Size = New System.Drawing.Size(144, 10)
         Me.ProgressBar1.TabIndex = 14
@@ -452,10 +456,25 @@ Partial Class Klokke
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 3000
         '
+        'Button2
+        '
+        Me.Button2.BackColor = System.Drawing.SystemColors.ActiveCaptionText
+        Me.Button2.FlatAppearance.BorderColor = System.Drawing.Color.Black
+        Me.Button2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button2.ForeColor = System.Drawing.Color.DodgerBlue
+        Me.Button2.Location = New System.Drawing.Point(2, 9)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(32, 26)
+        Me.Button2.TabIndex = 37
+        Me.Button2.Text = "Re"
+        Me.Button2.UseVisualStyleBackColor = False
+        '
         'Klokke
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.BackColor = System.Drawing.SystemColors.ActiveCaptionText
+        Me.BackColor = System.Drawing.Color.Black
         Me.ClientSize = New System.Drawing.Size(167, 321)
         Me.ControlBox = False
         Me.Controls.Add(Me.Label1)
@@ -510,4 +529,5 @@ Partial Class Klokke
     Friend WithEvents ProgressBar3 As ProgressBar
     Friend WithEvents Label3 As Label
     Friend WithEvents Label14 As Label
+    Friend WithEvents Button2 As Button
 End Class
