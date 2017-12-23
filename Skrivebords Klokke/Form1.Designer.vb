@@ -29,6 +29,7 @@ Partial Class Klokke
         Me.RadioButton3 = New System.Windows.Forms.RadioButton()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Button2 = New System.Windows.Forms.Button()
         Me.ProgressBar6 = New System.Windows.Forms.ProgressBar()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.Label24 = New System.Windows.Forms.Label()
@@ -58,7 +59,6 @@ Partial Class Klokke
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.Button2 = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -162,6 +162,21 @@ Partial Class Klokke
         Me.GroupBox1.Size = New System.Drawing.Size(161, 320)
         Me.GroupBox1.TabIndex = 8
         Me.GroupBox1.TabStop = False
+        '
+        'Button2
+        '
+        Me.Button2.BackColor = System.Drawing.SystemColors.ActiveCaptionText
+        Me.Button2.FlatAppearance.BorderColor = System.Drawing.Color.Black
+        Me.Button2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button2.ForeColor = System.Drawing.Color.DodgerBlue
+        Me.Button2.Location = New System.Drawing.Point(2, 9)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(32, 26)
+        Me.Button2.TabIndex = 37
+        Me.Button2.Text = "Re"
+        Me.Button2.UseVisualStyleBackColor = False
         '
         'ProgressBar6
         '
@@ -455,21 +470,6 @@ Partial Class Klokke
         '
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 3000
-        '
-        'Button2
-        '
-        Me.Button2.BackColor = System.Drawing.SystemColors.ActiveCaptionText
-        Me.Button2.FlatAppearance.BorderColor = System.Drawing.Color.Black
-        Me.Button2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.Button2.ForeColor = System.Drawing.Color.DodgerBlue
-        Me.Button2.Location = New System.Drawing.Point(2, 9)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(32, 26)
-        Me.Button2.TabIndex = 37
-        Me.Button2.Text = "Re"
-        Me.Button2.UseVisualStyleBackColor = False
         '
         'Klokke
         '

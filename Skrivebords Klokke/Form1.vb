@@ -7,31 +7,28 @@ Public Class Klokke
     Dim totaltMinne As String = (CStr(My.Computer.Info.TotalPhysicalMemory)).Remove(5)
     Dim old_Tot_R_Bytes As Long = 0
     Dim old_Tot_T_Bytes As Long = 0
-    Dim active_Nic As Integer = 0
+    Dim active_Nic As System.Net.NetworkInformation.NetworkInterface
 
-    Function Get_Main_Nic() As Integer
+    Function Get_Main_Nic() As System.Net.NetworkInformation.NetworkInterface
         Dim nics As System.Net.NetworkInformation.NetworkInterface() = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces
-
-        Dim i As Integer = 0
         For Each nic As System.Net.NetworkInformation.NetworkInterface In nics
             If nic.Name = "Ethernet" Then
-                Return i
+                Return nic
                 Exit For
             End If
-            i += 1
         Next
         MsgBox("Could not find a Network Interface matching the name 'Ethernet'")
-        Return 0
+        Return nics(0)
     End Function
 
     Function get_Tot_R_Bytes()
-        Dim ipv4Stats As System.Net.NetworkInformation.NetworkInterface
-        Return ipv4Stats.GetAllNetworkInterfaces(active_Nic).GetIPStatistics.BytesReceived
+        'Dim ipv4Stats As System.Net.NetworkInformation.NetworkInterface
+        Return active_Nic.GetIPStatistics.BytesReceived
     End Function
 
     Function Get_Tot_T_Bytes()
-        Dim ipv4Stats As System.Net.NetworkInformation.NetworkInterface
-        Return ipv4Stats.GetAllNetworkInterfaces(active_Nic).GetIPStatistics.BytesSent
+        'Dim ipv4Stats As System.Net.NetworkInformation.NetworkInterface
+        Return active_Nic.GetIPStatistics.BytesSent
     End Function
 
     Private Sub Timer2_Tick(sender As Object, e As EventArgs) Handles Timer2.Tick
@@ -64,48 +61,49 @@ Public Class Klokke
         Me.Close()
     End Sub
 
+    'Formater disk plass
+    Function round_TotalSize(ByRef disk As System.IO.DriveInfo) As Integer
+        Return Math.Round((disk.TotalSize / 1000000000), 0)
+    End Function
+    Function round_FreeSpace(ByRef disk As System.IO.DriveInfo) As Integer
+        Return Math.Round((disk.AvailableFreeSpace / 1000000000), 0)
+    End Function
+
     'Ved lasting flyttes prog opp i venste hjørne, CPU last skrives til label md timer.
     Private Sub Klokke_Load() Handles MyBase.Load
         Me.Location = Screen.AllScreens(2).Bounds.Location + New Point(0, 0)
         RadioButton3.Checked = 1
         ProgressBar1.Maximum = totaltMinne
-
         active_Nic = Get_Main_Nic()
-
         old_Tot_R_Bytes = get_Tot_R_Bytes()
         old_Tot_T_Bytes = Get_Tot_T_Bytes()
 
-        ProgressBar1.Maximum = totaltMinne
-
         'Les og sett disk størrelse og ledig
-        Dim cdrive As System.IO.DriveInfo
-        Dim ddrive As System.IO.DriveInfo
-        Dim edrive As System.IO.DriveInfo
-        Dim fdrive As System.IO.DriveInfo
-        cdrive = My.Computer.FileSystem.GetDriveInfo("C:\")
-        ddrive = My.Computer.FileSystem.GetDriveInfo("D:\")
-        edrive = My.Computer.FileSystem.GetDriveInfo("E:\")
-        fdrive = My.Computer.FileSystem.GetDriveInfo("F:\")
+        Dim drive_Letters() As Char = {"C", "D", "E", "F"}
+        Dim drives(drive_Letters.Length) As System.IO.DriveInfo
 
-        Dim cdrive_Total As Integer = Math.Round((cdrive.TotalSize / 1000000000), 0)
-        Dim ddrive_Total As Integer = Math.Round((ddrive.TotalSize / 1000000000), 0)
-        Dim edrive_Total As Integer = Math.Round((edrive.TotalSize / 1000000000000), 0)
-        Dim fdrive_Total As Integer = Math.Round((fdrive.TotalSize / 1000000000000), 0)
+        Dim i As Integer = 0
+        For Each drv_letter As Char In drive_Letters
+            Dim mount_point As String = drv_letter + ":\"
+            drives(i) = My.Computer.FileSystem.GetDriveInfo(mount_point)
+            i += 1
+        Next
 
-        Dim cdrive_Free As Integer = Math.Round((cdrive.AvailableFreeSpace / 1000000000), 0)
-        Dim ddrive_Free As Integer = Math.Round((ddrive.AvailableFreeSpace / 1000000000), 0)
-        Dim edrive_Free As Integer = Math.Round((edrive.AvailableFreeSpace / 1000000000000), 0)
-        Dim fdrive_Free As Integer = Math.Round((fdrive.AvailableFreeSpace / 1000000000000), 0)
+        Label3.Text = " " + CStr(round_TotalSize(drives(0))) + "GB"
+        Label16.Text = " " + CStr(round_TotalSize(drives(1))) + "GB"
 
-        Label3.Text = " " + CStr(cdrive_Total) + "GB"
-        Label16.Text = " " + CStr(ddrive_Total) + "GB"
-        Label19.Text = " " + CStr(edrive_Total) + "TB"
-        Label22.Text = " " + CStr(fdrive_Total) + "TB"
+        Dim edrive As String = CStr(round_TotalSize(drives(2)))
+        edrive = edrive.Remove(edrive.Length - 3)
+        Label19.Text = " " + edrive + "TB"
 
-        ProgressBar3.Value = (((cdrive_Total - cdrive_Free) / cdrive_Total)) * 100
-        ProgressBar4.Value = (((ddrive_Total - ddrive_Free) / ddrive_Total)) * 100
-        ProgressBar5.Value = (((edrive_Total - edrive_Free) / edrive_Total)) * 100
-        ProgressBar6.Value = (((fdrive_Total - fdrive_Free) / fdrive_Total)) * 100
+        Dim fdrive As String = CStr(round_TotalSize(drives(3)))
+        fdrive = fdrive.Remove(fdrive.Length - 3)
+        Label22.Text = " " + fdrive + "TB"
+
+        ProgressBar3.Value = ((round_TotalSize(drives(0))) - round_FreeSpace(drives(0))) / round_TotalSize(drives(0)) * 100
+        ProgressBar4.Value = ((round_TotalSize(drives(1))) - round_FreeSpace(drives(1))) / round_TotalSize(drives(1)) * 100
+        ProgressBar5.Value = ((round_TotalSize(drives(2))) - round_FreeSpace(drives(2))) / round_TotalSize(drives(2)) * 100
+        ProgressBar6.Value = ((round_TotalSize(drives(3))) - round_FreeSpace(drives(3))) / round_TotalSize(drives(3)) * 100
 
     End Sub
     ' Batch files located in 'project'\bin\debug
@@ -189,4 +187,5 @@ Public Class Klokke
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         Klokke_Load()
     End Sub
+
 End Class
