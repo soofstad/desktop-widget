@@ -159,7 +159,7 @@ Partial Class Klokke
         Me.GroupBox1.Controls.Add(Me.PictureBox2)
         Me.GroupBox1.Location = New System.Drawing.Point(2, -3)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(161, 320)
+        Me.GroupBox1.Size = New System.Drawing.Size(161, 302)
         Me.GroupBox1.TabIndex = 8
         Me.GroupBox1.TabStop = False
         '
@@ -180,9 +180,9 @@ Partial Class Klokke
         '
         'ProgressBar6
         '
-        Me.ProgressBar6.Location = New System.Drawing.Point(8, 309)
+        Me.ProgressBar6.Location = New System.Drawing.Point(8, 370)
         Me.ProgressBar6.Name = "ProgressBar6"
-        Me.ProgressBar6.Size = New System.Drawing.Size(144, 3)
+        Me.ProgressBar6.Size = New System.Drawing.Size(144, 5)
         Me.ProgressBar6.TabIndex = 36
         Me.ProgressBar6.Value = 1
         '
@@ -190,10 +190,10 @@ Partial Class Klokke
         '
         Me.Label22.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label22.ForeColor = System.Drawing.Color.Gray
-        Me.Label22.Location = New System.Drawing.Point(103, 296)
+        Me.Label22.Location = New System.Drawing.Point(103, 357)
         Me.Label22.Name = "Label22"
         Me.Label22.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Label22.Size = New System.Drawing.Size(50, 12)
+        Me.Label22.Size = New System.Drawing.Size(50, 14)
         Me.Label22.TabIndex = 35
         Me.Label22.Text = "32G"
         Me.Label22.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -203,7 +203,7 @@ Partial Class Klokke
         Me.Label24.AutoSize = True
         Me.Label24.Font = New System.Drawing.Font("Courier New", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label24.ForeColor = System.Drawing.Color.White
-        Me.Label24.Location = New System.Drawing.Point(7, 292)
+        Me.Label24.Location = New System.Drawing.Point(7, 353)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(22, 16)
         Me.Label24.TabIndex = 33
@@ -317,7 +317,7 @@ Partial Class Klokke
         Me.Label15.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label15.ForeColor = System.Drawing.Color.White
-        Me.Label15.Location = New System.Drawing.Point(59, 210)
+        Me.Label15.Location = New System.Drawing.Point(59, 207)
         Me.Label15.Name = "Label15"
         Me.Label15.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.Label15.Size = New System.Drawing.Size(69, 15)
@@ -330,7 +330,7 @@ Partial Class Klokke
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label12.ForeColor = System.Drawing.Color.White
-        Me.Label12.Location = New System.Drawing.Point(24, 187)
+        Me.Label12.Location = New System.Drawing.Point(24, 184)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(39, 15)
         Me.Label12.TabIndex = 13
@@ -369,7 +369,7 @@ Partial Class Klokke
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label10.ForeColor = System.Drawing.Color.Gray
-        Me.Label10.Location = New System.Drawing.Point(131, 139)
+        Me.Label10.Location = New System.Drawing.Point(127, 139)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(22, 12)
         Me.Label10.TabIndex = 11
@@ -463,19 +463,17 @@ Partial Class Klokke
         '
         'Timer2
         '
-        Me.Timer2.Enabled = True
         Me.Timer2.Interval = 1000
         '
         'Timer1
         '
-        Me.Timer1.Enabled = True
         Me.Timer1.Interval = 3000
         '
         'Klokke
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.Color.Black
-        Me.ClientSize = New System.Drawing.Size(167, 321)
+        Me.ClientSize = New System.Drawing.Size(167, 300)
         Me.ControlBox = False
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.GroupBox1)

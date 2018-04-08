@@ -4,20 +4,25 @@ Imports System.Management
 
 Public Class Klokke
     Dim cpu As New PerformanceCounter
-    Dim totaltMinne As String = (CStr(My.Computer.Info.TotalPhysicalMemory)).Remove(5)
+    Dim totaltMinne As ULong = Math.Round((My.Computer.Info.TotalPhysicalMemory / 1000000))
     Dim old_Tot_R_Bytes As Long = 0
     Dim old_Tot_T_Bytes As Long = 0
     Dim active_Nic As System.Net.NetworkInformation.NetworkInterface
 
     Function Get_Main_Nic() As System.Net.NetworkInformation.NetworkInterface
+        Dim input_nic As String = ""
+        ' Get NIC to monitor from InputBox
+        input_nic = InputBox("Enter name of Network Interface to monitor.", "Default NIC", "vEthernet (External Virtual Switch)")
+
+        ' Loop through all NICs and return the NIC mathing on name from input.
         Dim nics As System.Net.NetworkInformation.NetworkInterface() = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces
         For Each nic As System.Net.NetworkInformation.NetworkInterface In nics
-            If nic.Name = "Ethernet" Then
+            If nic.Name = input_nic Then
                 Return nic
                 Exit For
             End If
         Next
-        MsgBox("Could not find a Network Interface matching the name 'Ethernet'")
+        MsgBox("Could not find a Network Interface matching the name '" & input_nic & "' ." & vbCrLf & vbCrLf & "Using Default NIC.")
         Return nics(0)
     End Function
 
@@ -47,9 +52,8 @@ Public Class Klokke
         ProgressBar2.Value = prosent
 
         'Setter minne load
-        Dim ledigMinne As Integer = (CStr(My.Computer.Info.AvailablePhysicalMemory)).Remove(5)
-        'Dim ledigMinneGB As Double = Math.Round((ledigMinne / 1000), 2)
-        Dim bruktMinne As Double = (totaltMinne - ledigMinne)
+        Dim ledigMinne As ULong = Math.Round((My.Computer.Info.AvailablePhysicalMemory / 1000000))
+        Dim bruktMinne As ULong = (totaltMinne - ledigMinne)
         Dim bruktMinneGB As Double = Math.Round((bruktMinne / 1000), 2)
         ProgressBar1.Value = CShort(bruktMinne)
         Label9.Text = bruktMinneGB & "G"
@@ -74,12 +78,13 @@ Public Class Klokke
         Me.Location = Screen.AllScreens(2).Bounds.Location + New Point(0, 0)
         RadioButton3.Checked = 1
         ProgressBar1.Maximum = totaltMinne
+        Label10.Text = CStr(Math.Round((totaltMinne / 1000), 0)) + "GB"
         active_Nic = Get_Main_Nic()
         old_Tot_R_Bytes = get_Tot_R_Bytes()
         old_Tot_T_Bytes = Get_Tot_T_Bytes()
 
         'Les og sett disk størrelse og ledig
-        Dim drive_Letters() As Char = {"C", "D", "E", "F"}
+        Dim drive_Letters() As Char = {"C", "D", "E"}
         Dim drives(drive_Letters.Length) As System.IO.DriveInfo
 
         Dim i As Integer = 0
@@ -94,17 +99,20 @@ Public Class Klokke
 
         Dim edrive As String = CStr(round_TotalSize(drives(2)))
         edrive = edrive.Remove(edrive.Length - 3)
-        Label19.Text = " " + edrive + "TB"
+        Label19.Text = " " + CStr(round_TotalSize(drives(2))) + "GB"
 
-        Dim fdrive As String = CStr(round_TotalSize(drives(3)))
-        fdrive = fdrive.Remove(fdrive.Length - 3)
-        Label22.Text = " " + fdrive + "TB"
+        'Dim fdrive As String = CStr(round_TotalSize(drives(3)))
+        'fdrive = fdrive.Remove(fdrive.Length - 3)
+        'Label22.Text = " " + fdrive + "TB"
 
         ProgressBar3.Value = ((round_TotalSize(drives(0))) - round_FreeSpace(drives(0))) / round_TotalSize(drives(0)) * 100
         ProgressBar4.Value = ((round_TotalSize(drives(1))) - round_FreeSpace(drives(1))) / round_TotalSize(drives(1)) * 100
         ProgressBar5.Value = ((round_TotalSize(drives(2))) - round_FreeSpace(drives(2))) / round_TotalSize(drives(2)) * 100
-        ProgressBar6.Value = ((round_TotalSize(drives(3))) - round_FreeSpace(drives(3))) / round_TotalSize(drives(3)) * 100
+        'ProgressBar6.Value = ((round_TotalSize(drives(3))) - round_FreeSpace(drives(3))) / round_TotalSize(drives(3)) * 100
 
+        ' Enable Timers
+        Timer1.Enabled = True
+        Timer2.Enabled = True
     End Sub
     ' Batch files located in 'project'\bin\debug
     Private Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton1.CheckedChanged
@@ -187,5 +195,6 @@ Public Class Klokke
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         Klokke_Load()
     End Sub
+
 
 End Class
