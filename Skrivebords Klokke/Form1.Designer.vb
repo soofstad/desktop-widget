@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class Klokke
+Partial Class Widget
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -469,7 +469,7 @@ Partial Class Klokke
         '
         Me.Timer1.Interval = 3000
         '
-        'Klokke
+        'Widget
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.Color.Black
@@ -478,7 +478,7 @@ Partial Class Klokke
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.GroupBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
-        Me.Name = "Klokke"
+        Me.Name = "Widget"
         Me.ShowIcon = False
         Me.ShowInTaskbar = False
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide

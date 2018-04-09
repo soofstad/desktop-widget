@@ -2,24 +2,33 @@
 Imports System.Management
 
 
-Public Class Klokke
+Public Class Widget
     Dim cpu As New PerformanceCounter
-    Dim totaltMinne As ULong = Math.Round((My.Computer.Info.TotalPhysicalMemory / 1000000))
+    ' Minna as MB
+    Dim totaltMinneMB As ULong = Math.Round((My.Computer.Info.TotalPhysicalMemory / 1048576))
     Dim old_Tot_R_Bytes As Long = 0
     Dim old_Tot_T_Bytes As Long = 0
     Dim active_Nic As System.Net.NetworkInformation.NetworkInterface
 
     Function Get_Main_Nic() As System.Net.NetworkInformation.NetworkInterface
         Dim input_nic As String = ""
-        ' Get NIC to monitor from InputBox
-        input_nic = InputBox("Enter name of Network Interface to monitor.", "Default NIC", "vEthernet (External Virtual Switch)")
+        Dim nics As System.Net.NetworkInformation.NetworkInterface() = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces
+        Dim allNicsList As String = ""
 
         ' Loop through all NICs and return the NIC mathing on name from input.
-        Dim nics As System.Net.NetworkInformation.NetworkInterface() = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces
-        For Each nic As System.Net.NetworkInformation.NetworkInterface In nics
+
+        For Each nic In nics
+            allNicsList += nic.Name + vbCrLf
+        Next
+        ' Get NIC to monitor from InputBox.
+        input_nic = InputBox("Enter name of the network interface to monitor." + vbCrLf + "It should be one of these;" + vbCrLf + vbCrLf + allNicsList + vbCrLf, "Default NIC", "vEthernet (External Virtual Switch)")
+        ' Close application if the InputBox is canceled or exited.
+        If input_nic = "" Then
+            Me.Close()
+        End If
+        For Each nic In nics
             If nic.Name = input_nic Then
                 Return nic
-                Exit For
             End If
         Next
         MsgBox("Could not find a Network Interface matching the name '" & input_nic & "' ." & vbCrLf & vbCrLf & "Using Default NIC.")
@@ -27,15 +36,14 @@ Public Class Klokke
     End Function
 
     Function get_Tot_R_Bytes()
-        'Dim ipv4Stats As System.Net.NetworkInformation.NetworkInterface
         Return active_Nic.GetIPStatistics.BytesReceived
     End Function
 
     Function Get_Tot_T_Bytes()
-        'Dim ipv4Stats As System.Net.NetworkInformation.NetworkInterface
         Return active_Nic.GetIPStatistics.BytesSent
     End Function
 
+    ' Timer for each second
     Private Sub Timer2_Tick(sender As Object, e As EventArgs) Handles Timer2.Tick
         'Setter klokka
         Label1.Text = TimeOfDay
@@ -52,33 +60,79 @@ Public Class Klokke
         ProgressBar2.Value = prosent
 
         'Setter minne load
-        Dim ledigMinne As ULong = Math.Round((My.Computer.Info.AvailablePhysicalMemory / 1000000))
-        Dim bruktMinne As ULong = (totaltMinne - ledigMinne)
-        Dim bruktMinneGB As Double = Math.Round((bruktMinne / 1000), 2)
-        ProgressBar1.Value = CShort(bruktMinne)
-        Label9.Text = bruktMinneGB & "G"
+        Dim leigMinneMB As ULong = Math.Round((My.Computer.Info.AvailablePhysicalMemory / 1048576))
+        Dim bruktMinneMB As ULong = (totaltMinneMB - leigMinneMB)
+        ProgressBar1.Value = CShort(bruktMinneMB)
+        Label9.Text = Math.Round((bruktMinneMB / 1024), 2) & "G"
 
     End Sub
 
-    'Avslutt knapp
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Me.Close()
+    ' Timer for every 3 second. Network monitoring.
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        'Download
+        Dim cur_tot_bytes As Long = get_Tot_R_Bytes()
+        Dim bytes_Diff = cur_tot_bytes - old_Tot_R_Bytes
+        old_Tot_R_Bytes = cur_tot_bytes
+        Dim down_speed As Double = CDbl(bytes_Diff)
+        Dim suffix As String = "error"
+
+        Select Case down_speed
+            Case 0 To 1024
+                down_speed = down_speed / 3
+                down_speed = Math.Round(down_speed, 0)
+                suffix = "B/s"
+            Case 1025 To 1048576
+                down_speed = down_speed / 1024 / 3
+                down_speed = Math.Round(down_speed, 0)
+                suffix = "KB/s"
+            Case 1048577 To 1000000000
+                down_speed = down_speed / 1024 / 1024 / 3
+                down_speed = Math.Round(down_speed, 1)
+                suffix = "MB/s"
+        End Select
+
+        Label15.Text = down_speed.ToString & suffix
+
+        'Upload
+        cur_tot_bytes = Get_Tot_T_Bytes()
+        bytes_Diff = cur_tot_bytes - old_Tot_T_Bytes
+        old_Tot_T_Bytes = cur_tot_bytes
+
+        Dim up_speed As Double = CDbl(bytes_Diff)
+        suffix = "error"
+
+        Select Case up_speed
+            Case 0 To 1024
+                up_speed = up_speed / 3
+                up_speed = Math.Round(up_speed, 0)
+                suffix = "B/s"
+            Case 1025 To 1048576
+                up_speed = up_speed / 1024 / 3
+                up_speed = Math.Round(up_speed, 0)
+                suffix = "KB/s"
+            Case 1048577 To 1000000000
+                up_speed = up_speed / 1024 / 1024 / 3
+                up_speed = Math.Round(up_speed, 1)
+                suffix = "MB/s"
+        End Select
+
+        Label12.Text = up_speed.ToString & suffix
     End Sub
 
-    'Formater disk plass
+    'Format stings in disk size to GB
     Function round_TotalSize(ByRef disk As System.IO.DriveInfo) As Integer
-        Return Math.Round((disk.TotalSize / 1000000000), 0)
+        Return Math.Round((disk.TotalSize / 1073741824), 0)
     End Function
     Function round_FreeSpace(ByRef disk As System.IO.DriveInfo) As Integer
-        Return Math.Round((disk.AvailableFreeSpace / 1000000000), 0)
+        Return Math.Round((disk.AvailableFreeSpace / 1073741824), 0)
     End Function
 
     'Ved lasting flyttes prog opp i venste hjørne, CPU last skrives til label md timer.
-    Private Sub Klokke_Load() Handles MyBase.Load
+    Private Sub Widget_Load() Handles MyBase.Load
         Me.Location = Screen.AllScreens(2).Bounds.Location + New Point(0, 0)
         RadioButton3.Checked = 1
-        ProgressBar1.Maximum = totaltMinne
-        Label10.Text = CStr(Math.Round((totaltMinne / 1000), 0)) + "GB"
+        ProgressBar1.Maximum = totaltMinneMB
+        Label10.Text = CStr(Math.Round((totaltMinneMB / 1024), 0)) + "GB"
         active_Nic = Get_Main_Nic()
         old_Tot_R_Bytes = get_Tot_R_Bytes()
         old_Tot_T_Bytes = Get_Tot_T_Bytes()
@@ -138,62 +192,14 @@ Public Class Klokke
         System.Diagnostics.Process.Start("muteMic.bat")
     End Sub
 
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        'Nettverk monitorering
-
-        'Download
-        Dim cur_tot_bytes As Long = get_Tot_R_Bytes()
-        Dim bytes_Diff = cur_tot_bytes - old_Tot_R_Bytes
-        old_Tot_R_Bytes = cur_tot_bytes
-        Dim down_speed As Double = CDbl(bytes_Diff)
-        Dim suffix As String = "error"
-
-        Select Case down_speed
-            Case 0 To 1000
-                down_speed = down_speed / 3
-                down_speed = Math.Round(down_speed, 0)
-                suffix = "B/s"
-            Case 1000 To 1000000
-                down_speed = down_speed / 1000 / 3
-                down_speed = Math.Round(down_speed, 0)
-                suffix = "KB/s"
-            Case 1000000 To 1000000000
-                down_speed = down_speed / 1000 / 1000 / 3
-                down_speed = Math.Round(down_speed, 1)
-                suffix = "MB/s"
-        End Select
-
-        Label15.Text = down_speed.ToString & suffix
-
-        'Upload
-        cur_tot_bytes = Get_Tot_T_Bytes()
-        bytes_Diff = cur_tot_bytes - old_Tot_T_Bytes
-        old_Tot_T_Bytes = cur_tot_bytes
-
-        Dim up_speed As Double = CDbl(bytes_Diff)
-        suffix = "error"
-
-        Select Case up_speed
-            Case 0 To 1000
-                up_speed = up_speed / 3
-                up_speed = Math.Round(up_speed, 0)
-                suffix = "B/s"
-            Case 1000 To 1000000
-                up_speed = up_speed / 1000 / 3
-                up_speed = Math.Round(up_speed, 0)
-                suffix = "KB/s"
-            Case 1000000 To 1000000000
-                up_speed = up_speed / 1000 / 1000 / 3
-                up_speed = Math.Round(up_speed, 1)
-                suffix = "MB/s"
-        End Select
-
-        Label12.Text = up_speed.ToString & suffix
+    'Avslutt knapp
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Me.Close()
     End Sub
 
     'Reload knapp
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        Klokke_Load()
+        Widget_Load()
     End Sub
 
 
